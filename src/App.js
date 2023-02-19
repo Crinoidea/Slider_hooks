@@ -1,8 +1,8 @@
-import {Component, useState} from 'react';
+import {Component, useState, useEffect} from 'react';
 import {Container} from 'react-bootstrap';
 import './App.css';
 
-class Slider extends Component {
+/* class Slider extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -10,7 +10,14 @@ class Slider extends Component {
             slide: 0
         }
     }
-    
+
+    componentDidMount() {
+        document.title = `Slide: ${this.state.slide}`;
+    }
+
+    componentDidUpdate() {
+        document.title = `Slide: ${this.state.slide}`;
+    }
 
     changeSlide = (i) => {
         this.setState(({slide}) => ({
@@ -45,14 +52,44 @@ class Slider extends Component {
             </Container>
         )
     }
-}
+} */
 
 
-/* const Slider = (props) => {
+const Slider = (props) => {
 
     // const slideStateArray = useState();
     const [slide, setSlide] = useState(0);
     const [autoplay, setAutoplay] = useState(false);
+
+    function logging() {
+        console.log('log')
+    }
+
+    useEffect(() => {
+        console.log('effect update')
+        document.title = `Slide: ${slide}`;
+
+        window.addEventListener('click', logging);
+
+        return () => {
+            window.removeEventListener('click', logging);
+        }
+
+    }, [slide])
+
+    useEffect(() => {
+        console.log('effect')
+        document.title = `Slide: ${slide}`;
+    }, [])
+
+    useEffect(() => {
+        console.log('autoplay')
+    }, [autoplay])
+
+    // useEffect(() => {
+    //     console.log('effect update')
+    //     document.title = `Slide: ${slide}`;
+    // }, [slide])
 
     function changeSlide(i) {
         setSlide(slide => slide + i);
@@ -82,12 +119,18 @@ class Slider extends Component {
         </Container>
     )
 }
- */
+
 
 function App() {
-  return (
-        <Slider/>
-  );
+    const [slider, setSlider] = useState(true);
+
+
+    return (
+        <>
+            <button onClick={() => setSlider(false)}>Click</button>
+            {slider ? <Slider/> : null}
+        </>
+    );
 }
 
 export default App;
