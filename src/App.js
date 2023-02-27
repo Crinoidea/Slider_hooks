@@ -1,4 +1,4 @@
-import {Component, useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import {Container} from 'react-bootstrap';
 import './App.css';
 
@@ -53,9 +53,17 @@ import './App.css';
         )
     }
 } */
-
+/* const getSomeImages = () => {
+    console.log('fetching')
+    return [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Bukovina.JPG/1280px-Bukovina.jpg',
+        'https://lp-cms-production.imgix.net/features/2015/11/tatra-mountains-750-cs.jpg'
+    ]
+} */
 
 const Slider = (props) => {
+
+
 
     // const slideStateArray = useState();
     const [slide, setSlide] = useState(0);
@@ -64,6 +72,15 @@ const Slider = (props) => {
     function logging() {
         console.log('log')
     }
+
+    const getSomeImages = useCallback(() => {
+        console.log('fetching')
+        return [
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Bukovina.JPG/1280px-Bukovina.jpg',
+            'https://lp-cms-production.imgix.net/features/2015/11/tatra-mountains-750-cs.jpg'
+        ]
+    }, [slide])
+
 
     useEffect(() => {
         console.log('effect update')
@@ -102,7 +119,18 @@ const Slider = (props) => {
     return (
         <Container>
             <div className="slider w-50 m-auto">
-                <img className="d-block w-100" src="https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg" alt="slide" />
+{/*                 {
+                    getSomeImages().map((url, i) => {
+                        return (
+                            <img key={i} className="d-block w-100" src={url} alt="slide" />
+                        )
+                    })
+                } */}
+                
+                <Slide getSomeImages={getSomeImages}>
+
+                </Slide>
+
                 <div className="text-center mt-5">Active slide {slide} <br/> {autoplay ? 'auto' : null}</div>
                 <div className="buttons mt-3">
                     <button 
@@ -120,6 +148,21 @@ const Slider = (props) => {
     )
 }
 
+const Slide = ({getSomeImages}) => {
+    const [images, setImages] = useState([]);
+
+    useEffect(() => {
+        setImages(getSomeImages())
+    }, [getSomeImages])
+
+    return (
+        <>
+            {images.map((url, i) => {
+                <img key={i} className="d-block w-100" src={url} alt="slide" />
+            })}
+        </>
+    )
+}
 
 function App() {
     const [slider, setSlider] = useState(true);
