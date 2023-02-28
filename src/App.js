@@ -1,4 +1,4 @@
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect, useCallback, useMemo} from 'react';
 import {Container} from 'react-bootstrap';
 import './App.css';
 
@@ -57,13 +57,17 @@ import './App.css';
     console.log('fetching')
     return [
         'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Bukovina.JPG/1280px-Bukovina.jpg',
-        'https://lp-cms-production.imgix.net/features/2015/11/tatra-mountains-750-cs.jpg'
+        'https://lp-cms-production.imgix.   net/features/2015/11/tatra-mountains-750-cs.jpg'
     ]
 } */
 
+const countTotal = (num) => {
+    console.log('counting...');
+
+    return num + 10
+}
+
 const Slider = (props) => {
-
-
 
     // const slideStateArray = useState();
     const [slide, setSlide] = useState(0);
@@ -116,6 +120,22 @@ const Slider = (props) => {
         setAutoplay(autoplay => !autoplay);
     }
 
+    const total = useMemo(() => {
+        return countTotal(slide);
+    }, [slide]);
+
+/*     const style = {
+        color: slide > 4 ? 'red' : 'black'
+    } */
+    const style = useMemo(() => ({
+        color: slide > 4 ? 'red' : 'black'
+    }), [slide])
+
+
+    useEffect(() => {
+        console.log('style')
+    }, [style])
+
     return (
         <Container>
             <div className="slider w-50 m-auto">
@@ -130,8 +150,8 @@ const Slider = (props) => {
                 <Slide getSomeImages={getSomeImages}>
 
                 </Slide>
-
                 <div className="text-center mt-5">Active slide {slide} <br/> {autoplay ? 'auto' : null}</div>
+                <div style={style} className="text-center mt-5">Total slides: {total}</div>
                 <div className="buttons mt-3">
                     <button 
                         className="btn btn-primary me-2"
